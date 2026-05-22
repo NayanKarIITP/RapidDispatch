@@ -1,70 +1,195 @@
-# Getting Started with Create React App
+# Live Ops Helpdesk Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A real-time collaborative support dashboard built using **React.js** and **Socket.io-client**.
 
-## Available Scripts
+This frontend connects to a Node.js + Express + Socket.io backend to provide live ticket synchronization, ticket locking, and real-time collaboration between multiple support agents.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+# 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+* Real-time ticket dashboard
+* Live WebSocket communication using Socket.io-client
+* Instant ticket locking and unlocking
+* Real-time UI synchronization across multiple clients
+* Disabled editing for locked tickets
+* Visual lock indicators (🔒)
+* Automatic UI updates without page refresh
+* Connection loss detection with reconnect banner
+* Ghost disconnect recovery support
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+# 🏗️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* React.js
+* JavaScript
+* Socket.io-client
+* CSS / Inline Styling
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# 📂 Project Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash id="xqjj4d"
+frontend/
+│
+├── public/
+│
+├── src/
+│   ├── App.js
+│   ├── index.js
+│   └── socket.js
+│
+├── package.json
+└── README.md
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+# ⚙️ Installation
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Clone the repository:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash id="xlgw8u"
+git clone <your-repo-url>
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Move to frontend folder:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash id="jlwm4u"
+cd frontend
+```
 
-## Learn More
+Install dependencies:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```bash id="4nl1ur"
+npm install
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+# ▶️ Run The Frontend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Start development server:
 
-### Analyzing the Bundle Size
+```bash id="jlwmge"
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+# 🌐 Frontend Runs On
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```bash id="jlwm22"
+http://localhost:3000
+```
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+# 🔌 Backend Connection
 
-### Deployment
+The frontend connects to the backend Socket.io server using:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```js id="x4svjlwm"
+const socket = io("http://localhost:5000");
+```
 
-### `npm run build` fails to minify
+Make sure backend server is running before starting frontend.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+# 📡 Real-Time Functionality
+
+## Ticket Locking
+
+When an agent clicks the Edit button:
+
+```js id="psuzjlwm"
+socket.emit("lock_ticket", ticketId);
+```
+
+The backend validates the lock and broadcasts updates to all connected clients.
+
+---
+
+## Ticket Unlocking
+
+When an agent clicks Save / Close:
+
+```js id="1yjlwm"
+socket.emit("unlock_ticket", ticketId);
+```
+
+The ticket becomes available again for other agents.
+
+---
+
+# 🔒 Locking UI
+
+When a ticket is locked:
+
+* Ticket row turns gray
+* 🔒 icon appears
+* Edit button becomes disabled
+* Lock status updates instantly for all users
+
+---
+
+# 👻 Ghost Disconnect Handling
+
+If a user closes their browser unexpectedly:
+
+* Backend detects socket disconnect
+* Ticket lock is automatically released
+* Frontend instantly updates for all connected users
+
+---
+
+# 📶 Connection Loss Detection
+
+Frontend listens for:
+
+```js id="jlwmra"
+socket.on("disconnect")
+```
+
+If connection drops:
+
+* Red warning banner appears
+* User is informed about reconnecting state
+
+---
+
+# 🧪 Testing
+
+## Real-Time Lock Test
+
+1. Open two browser windows
+2. Lock a ticket in Window 1
+3. Window 2 instantly updates
+
+---
+
+## Ghost Disconnect Test
+
+1. Lock a ticket
+2. Close browser tab abruptly
+3. Ticket automatically unlocks in other windows
+
+---
+
+# 📌 Future Improvements
+
+* Authentication system
+* Agent names and avatars
+* Ticket creation API
+* Persistent database integration
+* Responsive UI improvements
+* Notification system
+
+---
+
+# 👨‍💻 Author
+
+Nayan Kar
